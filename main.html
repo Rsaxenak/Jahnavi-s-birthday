@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy 19th Birthday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ===================================================================
+     COLORS
+     Change any of these values and the whole page updates.
+     They are all shades of lilac / plum, as requested.
+     =================================================================== */
+  :root {
+    --lilac-pale:  #F6EEFA;  /* page background, lightest */
+    --lilac-soft:  #EADAF2;  /* secondary background */
+    --lilac-mid:   #CBA3DE;  /* borders, accents */
+    --lilac-deep:  #8E5FA8;  /* headings, accents, deeper */
+    --plum:        #4A2E5C;  /* main text color */
+    --plum-soft:   #77577F;  /* secondary text color */
+    --white-wash:  #FFFDFF;  /* card background */
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+    color: var(--plum);
+    background: linear-gradient(160deg, var(--lilac-pale) 0%, var(--lilac-soft) 55%, var(--lilac-pale) 100%);
+    overflow-x: hidden;
+  }
+
+  /* soft glowing blobs in the background, purely decorative */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.45;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .blob-1 { width: 340px; height: 340px; background: var(--lilac-mid); top: -120px; left: -100px; }
+  .blob-2 { width: 300px; height: 300px; background: var(--lilac-deep); bottom: -100px; right: -80px; opacity: 0.25; }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ---------------------------- HERO ---------------------------- */
+  .hero {
+    text-align: center;
+    padding: 90px 10px 50px;
+    animation: fadeIn 1.4s ease both;
+  }
+
+  .hero .eyebrow-heart {
+    font-size: 1.6rem;
+    color: var(--lilac-deep);
+    margin-bottom: 6px;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(2.4rem, 8vw, 4rem);
+    line-height: 1.1;
+    margin: 0 0 18px;
+    color: var(--plum);
+  }
+
+  /* EDIT ME: her name */
+  .hero h1 .name {
+    color: var(--lilac-deep);
+    font-style: italic;
+  }
+
+  .hero p.subtitle {
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    color: var(--plum-soft);
+    max-width: 46ch;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .flourish {
+    margin: 34px auto 0;
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--lilac-mid), transparent);
+    position: relative;
+  }
+  .flourish::after {
+    content: "✦";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--lilac-pale);
+    padding: 0 10px;
+    color: var(--lilac-deep);
+    font-size: 0.9rem;
+  }
+
+  /* ------------------------ OPENING MESSAGE ------------------------ */
+  .message-card {
+    background: var(--white-wash);
+    border: 1px solid var(--lilac-soft);
+    border-radius: 22px;
+    padding: 36px 30px;
+    margin: 50px 0;
+    box-shadow: 0 20px 45px -25px rgba(142, 95, 168, 0.45);
+  }
+
+  .message-card p {
+    font-size: 1.08rem;
+    line-height: 1.75;
+    color: var(--plum);
+    margin: 0 0 14px;
+  }
+  .message-card p:last-child { margin-bottom: 0; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.7rem;
+    color: var(--lilac-deep);
+    text-align: center;
+    margin: 70px 0 36px;
+  }
+
+  /* -------------------------- MEMORY BLOCKS -------------------------- 
+     Each ".memory" holds one photo + one bit of text, side by side
+     on a computer screen and stacked on a phone.
+  --------------------------------------------------------------------- */
+  .memory {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 46px;
+  }
+
+  /* alternate photo left/right on wide screens, just for visual rhythm */
+  .memory:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .memory-photo {
+    flex: 1 1 260px;
+    max-width: 260px;
+  }
+
+  .memory-text {
+    flex: 1 1 260px;
+  }
+
+.photo-frame {
+    position: relative;
+    width: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--lilac-soft);
+    border: 6px solid var(--white-wash);
+    box-shadow: 0 16px 34px -18px rgba(142, 95, 168, 0.55);
+}
+
+.photo-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+  /* shown automatically only if the photo file above isn't found */
+  .photo-placeholder {
+    display: none;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    color: var(--lilac-deep);
+    font-size: 0.95rem;
+    padding: 10px;
+    background: linear-gradient(160deg, var(--lilac-soft), var(--lilac-pale));
+  }
+  .photo-placeholder .heart { font-size: 1.6rem; }
+
+  .memory-text p {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--plum);
+  }
+
+  /* --------------------------- CLOSING --------------------------- */
+  .closing {
+    text-align: center;
+    margin-top: 80px;
+  }
+
+  .closing p.big-line {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--lilac-deep);
+    margin: 0 0 14px;
+  }
+
+  .closing p.signature {
+    color: var(--plum-soft);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero { animation: none; }
+  }
+
+  /* ===================================================================
+     BALLOONS
+     A handful of balloons float up from the bottom of the screen when
+     the page first opens, then fade away near the top.
+     They sit in a fixed box that covers the whole screen but
+     "pointer-events: none" makes sure they never block clicks/taps
+     or get in the way of scrolling and reading.
+     =================================================================== */
+  .balloons {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .balloon {
+    position: absolute;
+    bottom: -160px;              /* starts just below the screen */
+    width: 46px;
+    height: 58px;
+    border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+    opacity: 0;
+    animation-name: floatUp;
+    animation-duration: 9s;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+  }
+
+  /* the little string hanging under each balloon */
+  .balloon::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 1px;
+    height: 26px;
+    background: var(--plum-soft);
+    opacity: 0.5;
+  }
+
+  /* EDIT ME (colors): change any of these to swap a balloon's shade */
+  .balloon:nth-child(1) { left: 6%;  background: var(--lilac-mid);  animation-delay: 0.2s; }
+  .balloon:nth-child(2) { left: 20%; background: var(--lilac-deep); width: 40px; height: 50px; animation-delay: 1.4s; }
+  .balloon:nth-child(3) { left: 36%; background: var(--white-wash); border: 1px solid var(--lilac-mid); animation-delay: 0.8s; }
+  .balloon:nth-child(4) { left: 52%; background: var(--lilac-soft); border: 1px solid var(--lilac-mid); animation-delay: 2s; }
+  .balloon:nth-child(5) { left: 68%; background: var(--lilac-deep); width: 42px; height: 54px; animation-delay: 0.5s; }
+  .balloon:nth-child(6) { left: 82%; background: var(--lilac-mid);  animation-delay: 1.7s; }
+  .balloon:nth-child(7) { left: 94%; background: var(--white-wash); border: 1px solid var(--lilac-mid); width: 38px; height: 48px; animation-delay: 1s; }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(0) translateX(0);       opacity: 0; }
+    8%   { opacity: 0.9; }
+    50%  { transform: translateY(-55vh) translateX(18px); }
+    100% { transform: translateY(-115vh) translateX(-14px); opacity: 0; }
+  }
+
+  /* people who prefer reduced motion won't see the balloons float in */
+  @media (prefers-reduced-motion: reduce) {
+    .balloons { display: none; }
+  }
+
+  /* ===================================================================
+     NEW #1 — CONFETTI
+     A burst of little lilac pieces rains down when the page opens.
+     The pieces are created by the small script at the very bottom of
+     this file, and they delete themselves once they've fallen off
+     screen, so they never slow the page down.
+     =================================================================== */
+  .confetti-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;   /* never blocks taps or scrolling */
+    overflow: hidden;
+  }
+
+  .confetti-bit {
+    position: absolute;
+    top: -30px;
+    opacity: 0;
+    animation-name: confettiFall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes confettiFall {
+    0%   { transform: translateY(-10vh) translateX(0) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translateY(108vh) translateX(var(--drift)) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===================================================================
+     NEW #2 + #3 — THE CAKE & THE CANDLE
+     The whole cake is drawn with CSS shapes, so there's no image file
+     to worry about. The flame flickers on its own; pressing the button
+     puts it out and a little puff of smoke rises.
+     =================================================================== */
+  .cake-area {
+    margin: 50px auto 34px;
+    text-align: center;
+  }
+
+  .cake {
+    position: relative;
+    width: 190px;
+    margin: 0 auto;
+  }
+
+  /* --- the candle --- */
+  .candle {
+    position: relative;
+    width: 12px;
+    height: 46px;
+    margin: 0 auto;
+    border-radius: 3px 3px 0 0;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--lilac-deep) 0px, var(--lilac-deep) 5px,
+      var(--white-wash) 5px, var(--white-wash) 10px
+    );
+    z-index: 2;
+  }
+
+  /* the wick */
+  .candle::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 7px;
+    background: var(--plum);
+    border-radius: 1px;
+  }
+
+  /* --- the flame --- */
+  .flame {
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    width: 15px;
+    height: 22px;
+    margin-left: -7.5px;
+    border-radius: 50% 50% 35% 35% / 65% 65% 35% 35%;
+    background: radial-gradient(circle at 50% 78%, #FFF3C4 0%, #FFC94D 42%, #FF8A3D 78%, #F2662E 100%);
+    box-shadow: 0 0 18px 6px rgba(255, 176, 74, 0.55),
+                0 0 44px 16px rgba(255, 196, 108, 0.28);
+    transform-origin: 50% 100%;
+    animation: flicker 0.75s ease-in-out infinite alternate;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  @keyframes flicker {
+    0%   { transform: scale(1)      rotate(-2.5deg) skewX(-2deg); }
+    35%  { transform: scale(1.06, 0.96) rotate(1.5deg) skewX(2deg); }
+    70%  { transform: scale(0.95, 1.05) rotate(-1deg) skewX(-1deg); }
+    100% { transform: scale(1.03, 0.98) rotate(2.5deg) skewX(2deg); }
+  }
+
+  /* --- the puff of smoke (hidden until the candle is blown out) --- */
+  .smoke {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    margin-left: -4.5px;
+    border-radius: 50%;
+    background: var(--plum-soft);
+    opacity: 0;
+  }
+
+  @keyframes smokeRise {
+    0%   { opacity: 0.45; transform: translateY(0) translateX(0) scale(0.5); }
+    100% { opacity: 0;    transform: translateY(-70px) translateX(16px) scale(2.6); }
+  }
+
+  /* --- the cake itself --- */
+  .frosting {
+    position: relative;
+    height: 24px;
+    border-radius: 12px 12px 4px 4px;
+    background: var(--white-wash);
+    box-shadow: inset 0 -3px 0 rgba(203, 163, 222, 0.18);
+  }
+
+  /* the drips hanging off the frosting */
+  .frosting::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 14px;
+    background-image: radial-gradient(circle 11px at 11px 0, var(--white-wash) 99%, transparent 100%);
+    background-size: 22px 14px;
+    background-repeat: repeat-x;
+  }
+
+  .layer-top {
+    height: 44px;
+    background: linear-gradient(180deg, var(--lilac-mid) 0%, #BE92D2 100%);
+  }
+
+  .layer-bottom {
+    height: 50px;
+    width: 112%;
+    margin-left: -6%;
+    border-radius: 0 0 10px 10px;
+    background: linear-gradient(180deg, var(--lilac-deep) 0%, #7A4E92 100%);
+    position: relative;
+  }
+
+  /* a simple band of dots around the bottom layer */
+  .layer-bottom::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background-image: radial-gradient(circle 4px at 4px 4px, var(--lilac-soft) 99%, transparent 100%);
+    background-size: 20px 8px;
+    background-repeat: repeat-x;
+    opacity: 0.75;
+  }
+
+  .plate {
+    width: 128%;
+    margin-left: -14%;
+    height: 12px;
+    border-radius: 0 0 40% 40% / 0 0 100% 100%;
+    background: var(--lilac-soft);
+    box-shadow: 0 14px 26px -14px rgba(142, 95, 168, 0.6);
+  }
+
+  /* --- the button --- */
+  .wish-btn {
+    margin-top: 30px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--lilac-deep);
+    background: var(--white-wash);
+    border: 1px solid var(--lilac-mid);
+    border-radius: 999px;
+    padding: 12px 26px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -14px rgba(142, 95, 168, 0.65);
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+  }
+
+  .wish-btn:hover  { transform: translateY(-2px); background: var(--lilac-soft); }
+  .wish-btn:active { transform: translateY(0); }
+
+  /* the little line that appears after she blows it out */
+  .wish-msg {
+    margin: 18px 0 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--lilac-deep);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  /* ----- what changes once the candle is blown out ----- */
+  .cake-area.blown .flame {
+    opacity: 0;
+    transform: scale(0.25) translateY(6px);
+    animation: none;
+  }
+
+  .cake-area.blown .smoke {
+    animation: smokeRise 2.6s ease-out forwards;
+  }
+
+  .cake-area.blown .wish-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  .cake-area.blown .wish-msg {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flame { animation: none; }
+    .confetti-layer { display: none; }
+  }
+
+  /* ----------------------------- MOBILE ----------------------------- 
+     Below 640px wide: photo goes above text, full width, always in
+     the same top-to-bottom order (no left/right reversing).
+  --------------------------------------------------------------------- */
+  @media (max-width: 640px) {
+    .memory,
+    .memory:nth-child(even) {
+      flex-direction: column;
+      gap: 16px;
+    }
+    .memory-photo {
+      max-width: 100%;
+      width: 100%;
+    }
+    .photo-frame {
+      aspect-ratio: 16 / 11;
+    }
+    .message-card { padding: 28px 22px; }
+    .cake { width: 165px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CONFETTI: the pieces get added in here by the script at the bottom
+     of this file. Leave this empty div alone. -->
+<div class="confetti-layer" id="confetti-layer"></div>
+
+<!-- BALLOONS: purely decorative, float up once when the page opens.
+     Delete this whole block (down to </div> below) if you ever want
+     to remove them. To add more, copy one "<div class="balloon">"
+     line and give it its own "left" position in the CSS above. -->
+<div class="balloons">
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+</div>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<main>
+
+  <!-- ============================= HERO ============================= -->
+  <section class="hero">
+    <div class="eyebrow-heart">❤️</div>
+    <!-- EDIT ME: replace "Sweetheart" with her name -->
+    <h1>Happy 19th Birthday<br><span class="name">Dear Jahnavi! ❤️</span></h1>
+    <!-- EDIT ME: your opening line -->
+    <p class="subtitle">A little page I made just for you, to celebrate you, and your special day ;&#41;</p>
+    <div class="flourish"></div>
+  </section>
+
+  <!-- ===================== OPENING MESSAGE (optional) =====================
+       To remove this whole card, delete from the line above down to the
+       matching "</section>" a few lines below.
+  ========================================================================= -->
+  <section class="message-card">
+    <!-- EDIT ME: write your main birthday message here. You can add more
+         <p>...</p> lines for more paragraphs, or delete some. -->
+    <p>A day all of us have been waiting for, the day you were born!</p>
+    <p>The day god gifted us with a special cutie patootie charm, blessing us with a beautiful angel 😇 </p>
+  </section>
+
+  <!-- ============== TITLE FOR THE PHOTO SECTION (optional) ==============
+       Change the words below, or delete the whole line to remove the title.
+  ========================================================================= -->
+  <h2 class="section-title">So let's get started ;&#41;</h2>
+
+  <!-- ===================================================================
+       MEMORY BLOCK 1
+       Copy this whole block (start to end) to add more.
+       Delete this whole block to remove it.
+       =================================================================== -->
+  <!-- ===== MEMORY BLOCK START ===== -->
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <!-- STEP 1: put your photo file in the same folder as this HTML
+             file, then change "photo1.jpg" to its file name below. -->
+        <img src="images/cutie.jpeg" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+    </div>
+    <!-- text part - delete this whole div if you don't want text here -->
+    <div class="memory-text">
+      <!-- EDIT ME -->
+      <p>On this day, September 18 2007, a very kind and beautiful soul was born. A soul who can fill the whole room with joy just with her cute smile, who can cause chaos in the world of her loved ones, but somehow also be the reason that the chaos goes away. Yes babe, I'm talking about you 🫵😘 
+</p>
+    </div>
+  </div>
+  <!-- ===== MEMORY BLOCK END ===== -->
+
+  <!-- ===================================================================
+       MEMORY BLOCK 2
+       =================================================================== -->
+  <!-- ===== MEMORY BLOCK START ===== -->
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/family.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>You have always been a sweet daughter, a tabad tod khurafaat waali sister, and the cute little wifey I always hold in my arms 🥰🥰🤗🤗
+</p>
+    </div>
+  </div>
+  <!-- ===== MEMORY BLOCK END ===== -->
+
+  <!-- ===================================================================
+       MEMORY BLOCK 3
+       =================================================================== -->
+  <!-- ===== MEMORY BLOCK START ===== -->
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/happy.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>The world always gets a little brighter, simply because you are in it. Every time you smile, every time you laugh, you shine so bright, spreading light wherever you go. You just being here, with us, makes this a joy worth celebrating 🥳🥳</p>
+    </div>
+  </div>
+
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/growth.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>
+        You have really grown from the girl you were a few years ago. With every step you took into this world, you've learned, changed, stumbled, and found your way back up. There have been days, moments that felt impossibly heavy, yet somehow, you kept going. You always kept becoming someone new, yet retaining your charm, your cuteness and your loveliness ❤️
+      </p>
+    </div>
+  </div>
+
+
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/friends.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>
+        Whenever someone needed you, you have always been there for them. It was never a question of whether that person mattered to you or not, you were there. When someone was struggling, you held onto their arms, reached out, giving them hope, taking care of them, making them smile and feel alive, happy to have you in their lives, that's such a beautiful charm you have 💞
+      </p>
+    </div>
+  </div>
+
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/sad.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>
+        Whenever things don't go your way, even if the world starts breaking inside you, you never give up 💪❤️ sometimes strength isn't just about looking fearless and never breaking a smile. It's also about simply waking up and trying again. The way you have such a soft side while also being so bold, has always amazed me 😳😳
+      </p>
+    </div>
+  </div>
+
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/achievement.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="photo-placeholder">
+          <span class="heart">❤️</span>
+          add a photo here
+        </div>
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>
+        Every time you worked hard and accomplished something, you always make everyone around you proud. Seeing you succeed, achieving your goals slowly but surely while becoming better at the things you care about, always leaves everyone dazzled. So, just never ever underestimate your potential. Keep going, and you'll do great!! 💯💯
+      </p>
+    </div>
+  </div>
+
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/future.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="photo-placeholder">
+          <span class="heart">❤️</span>
+          add a photo here
+        </div>
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>
+        There's still so much to live for, so much to see in this world, and so many beautiful things, awaiting for you. I hope you always keep choosing yourself, your dreams, your peace, your happiness, your growth, and the person you want to become. All of these deserve a place in your life. You never need someone's approval to show you your worth. You are Jahnavi, my sweetie pie, and you are here, something which is already worth celebrating. 🎉🎉🎊🎊🎊 I'll always consider myself lucky, to get to live this life with you 🥰🥰❤️
+      </p>
+    </div>
+  </div>
+
+  <div class="memory">
+    <div class="memory-photo">
+      <div class="photo-frame">
+        <img src="images/final.png" alt="A photo of us"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="photo-placeholder">
+          <span class="heart">❤️</span>
+          add a photo here
+        </div>
+      </div>
+    </div>
+    <div class="memory-text">
+      <p>
+        I hope the upcoming year gives you all the reasons to laugh until you can't breathe, people who make you feel safe and secure, moments you'll remember years from now while laughing in a party with everyone, and countless little reasons to smile 😊💖
+      </p>
+      <p>
+        So here's to Nineteen years!
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ===== MEMORY BLOCK END ===== -->
+  <!-- ============================ CLOSING ============================
+       To remove this whole section, delete from the line above down to
+       the matching "</section>" below.
+  ==================================================================== -->
+  <section class="closing">
+    <!-- EDIT ME -->
+    <p class="big-line">Happy Birthday dear, may god gift you with all the happiness and success in this world 🥰</p>
+
+    <!-- ================= THE CAKE + CANDLE =================
+         Everything here is drawn with CSS, no image needed.
+         Delete this whole "cake-area" block to remove it.
+         The words on the button and the line that appears after
+         she blows the candle out are both marked EDIT ME below.
+    ======================================================== -->
+    <div class="cake-area" id="cakeArea">
+      <div class="cake">
+        <div class="candle">
+          <div class="smoke"></div>
+          <div class="flame"></div>
+        </div>
+        <div class="frosting"></div>
+        <div class="layer-top"></div>
+        <div class="layer-bottom"></div>
+        <div class="plate"></div>
+      </div>
+
+      <!-- EDIT ME: the words on the button -->
+      <button class="wish-btn" id="wishBtn" type="button">Make a wish, then blow 😘🕯️</button>
+
+      <!-- EDIT ME: the line that appears after she blows it out -->
+      <p class="wish-msg" id="wishMsg">Wish made! Now the universe will fulfill it 🥰 </p>
+    </div>
+
+    <!-- EDIT ME: your name -->
+    <p class="signature">Yours (literally)</p>
+    <p class="signature">Rishabh~</p>
+  </section>
+
+</main>
+
+<!-- ===================================================================
+     THE SCRIPT
+     This is the only bit of code on the page. It does two things:
+       1. drops confetti when the page opens
+       2. puts the candle out when the button is pressed
+     You don't need to change anything in here.
+     =================================================================== -->
+<script>
+  // ---------- 1. CONFETTI ----------
+  function dropConfetti(howMany) {
+    var layer  = document.getElementById('confetti-layer');
+    var colors = ['#CBA3DE', '#8E5FA8', '#EADAF2', '#FFFDFF', '#B98BD1', '#F0D9F7'];
+
+    for (var i = 0; i < howMany; i++) {
+      var bit = document.createElement('div');
+      bit.className = 'confetti-bit';
+      bit.style.left       = (Math.random() * 100) + 'vw';
+      bit.style.background = colors[Math.floor(Math.random() * colors.length)];
+      bit.style.width      = (6 + Math.random() * 6) + 'px';
+      bit.style.height     = (9 + Math.random() * 8) + 'px';
+      bit.style.animationDelay    = (Math.random() * 0.7) + 's';
+      bit.style.animationDuration = (2.8 + Math.random() * 2.2) + 's';
+      bit.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
+      if (Math.random() > 0.6) { bit.style.borderRadius = '50%'; }  // some round, some square
+
+      layer.appendChild(bit);
+
+      // tidy up after itself so the page stays light
+      (function (piece) {
+        setTimeout(function () { piece.remove(); }, 8000);
+      })(bit);
+    }
+  }
+
+  // drop the opening burst (change 70 for more or fewer pieces)
+  window.addEventListener('load', function () { dropConfetti(70); });
+
+  // ---------- 2. BLOWING OUT THE CANDLE ----------
+  var cakeArea = document.getElementById('cakeArea');
+  var wishBtn  = document.getElementById('wishBtn');
+
+  wishBtn.addEventListener('click', function () {
+    cakeArea.classList.add('blown');   // flame goes out, smoke rises, message appears
+    dropConfetti(45);                  // a second little burst to celebrate
+  });
+</script>
+
+</body>
+</html>
